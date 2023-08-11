@@ -35,6 +35,7 @@ def search_by_api(folder):
                         print(f"\nRequested permission: {requested_permission}")
             workbook.close()
 
+            # API fully covered search
             # Scan all sheets in the file
             for sheet_name in workbook.sheetnames:
                 sheet = workbook[sheet_name]
@@ -48,7 +49,25 @@ def search_by_api(folder):
                                 # Search for the required permission in the current sheet
                                 for row2 in other_sheet.iter_rows(values_only=True):
                                     if api_to_search in row2[2]:
-                                        print(f"\nService type: {other_sheets}\nVerb: {row2[0]}\nPermissions: {row2[1]}\nAPIs Fully Covered: {row2[2]}\nAPIs Partially Covered: {row2[3]}\n")
+                                        print(f"\n- API fully covered\nService type: {other_sheets}\nVerb: {row2[0]}\n")
+                break
+            workbook.close()
+
+            # API partially covered search
+            # Scan all sheets in the file
+            for sheet_name in workbook.sheetnames:
+                sheet = workbook[sheet_name]
+                # Search for the API operation in the current sheet
+                for row in sheet.iter_rows(values_only=True):
+                    if api_to_search in row:
+                        # Scan all sheets in the file
+                        for other_sheets in workbook.sheetnames:
+                            if other_sheets != "Permissions Required for Each A":
+                                other_sheet = workbook[other_sheets]
+                                # Search for the required permission in the current sheet
+                                for row2 in other_sheet.iter_rows(values_only=True):
+                                    if api_to_search in row2[3]:
+                                        print(f"\n- API partially covered\nService type: {other_sheets}\nVerb: {row2[0]}\n")
                 break
             workbook.close()
 
