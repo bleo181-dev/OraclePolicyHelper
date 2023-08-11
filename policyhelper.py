@@ -114,6 +114,7 @@ def policy_builder(folder):
                 print(f"Error opening the file {filename}: {e}")
                 continue
 
+            # API fully covered search
             # Scan all sheets in the file
             for sheet_name in workbook.sheetnames:
                 sheet = workbook[sheet_name]
@@ -127,6 +128,25 @@ def policy_builder(folder):
                                 # Search for the API in the current sheet
                                 for row2 in other_sheet.iter_rows(values_only=True):
                                     if api_to_search in row2[2]:
+                                        results = 1
+                                        print(f"\nPOLICY\nAllow {subject} to {row2[0].lower()} {other_sheets} in <location> where <conditions>\n")
+                break
+            workbook.close()
+
+            # API partially covered search
+            # Scan all sheets in the file
+            for sheet_name in workbook.sheetnames:
+                sheet = workbook[sheet_name]
+                # Search for the API operation in the current sheet
+                for row in sheet.iter_rows(values_only=True):
+                    if api_to_search in row:
+                        # Scan all sheets in the file
+                        for other_sheets in workbook.sheetnames:
+                            if other_sheets != "Permissions Required for Each A":
+                                other_sheet = workbook[other_sheets]
+                                # Search for the API in the current sheet
+                                for row2 in other_sheet.iter_rows(values_only=True):
+                                    if api_to_search in row2[3]:
                                         results = 1
                                         print(f"\nPOLICY\nAllow {subject} to {row2[0].lower()} {other_sheets} in <location> where <conditions>\n")
                 break
